@@ -10,6 +10,10 @@ INSERT INTO customers (first_name, last_name, phone, email, postalCode) VALUES (
 
 curl -d "firstName=Godot&lastName=Zimberg&phone=9712747176&email=dosey@gmail.com&postalCode=97211" -i -X POST "localhost:3000/customers/add"
 
+curl -d "firstName=Guillermo&lastName=Zimberg&phone=5038905118&email=guido@gmail.com&postalCode=97211" -i -X POST "localhost:3000/customers/add"
+
+curl -d "firstName=Millicent&lastName=Zimdars&phone=9712747176&email=maz@gmail.com&postalCode=97210" -i -X POST "localhost:3000/customers/add"
+
 curl -i localhost:3000/customers
 
 curl -d "id=2&firstName=Godot&lastName=Bergler&phone=9712747176&email=dosey@gmail.com&postalCode=97211" -i -X PUT "localhost:3000/customers/edit"
