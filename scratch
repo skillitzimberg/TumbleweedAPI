@@ -12,6 +12,8 @@ curl -d "firstName=Godot&lastName=Zimberg&phone=9712747176&email=dosey@gmail.com
 
 curl -i localhost:3000/customers
 
+curl -d "id=2&firstName=Godot&lastName=Bergler&phone=9712747176&email=dosey@gmail.com&postalCode=97211" -i -X PUT "localhost:3000/customers/edit"
+
 curl -i -X GET "localhost:3000/customers/find?id=1"
 
 curl -d "lastName=Bergler" -i -X PUT "localhost:3000/customers/3"
