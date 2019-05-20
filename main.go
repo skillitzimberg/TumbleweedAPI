@@ -1,7 +1,7 @@
 package main
 
 import (
-	"basicapi/models"
+	"TumbleweedAPI/models"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	host     = "postgres-db"
+	host     = "tumbleweed-db"
 	port     = 5432
 	user     = "postgres"
 	password = "docker"

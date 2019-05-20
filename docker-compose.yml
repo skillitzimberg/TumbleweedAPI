@@ -3,10 +3,10 @@ services:
   db-access:
     build: .
     depends_on:
-      - postgres-db
+      - tumbleweed-db
     ports:
       - "3000:3000"
-  postgres-db:
+  tumbleweed-db:
     image: postgres
     volumes:
       - /Users/ForeignFood/Development/TumbleweedAPI/volumes/postgres:/var/lib/postgresql/data
@@ -15,4 +15,4 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "docker"
-      POSTGRES_DATABASE: "myfirstdb"
+      POSTGRES_DATABASE: "tumbleweed"
