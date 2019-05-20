@@ -1,0 +1,13 @@
+docker run --rm --name postgres-db -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v /Users/ForeignFood/Development/TumbleweedAPI/volumes/postgres:/var/lib/postgresql/data postgres
+
+docker exec -it pg-docker psql -h localhost -p 5432 -U postgres
+
+createTableStatement := `CREATE TABLE IF NOT EXISTS customers (id SERIAL PRIMARY KEY, first_name TEXT, last_name TEXT, phone TEXT, email TEXT UNIQUE NOT NULL, postalCode TEXT);`
+
+curl -d "firstName=Godot&lastName=Zimberg&phone=9712747176&email=dosey@gmail.com&postalCode=97211" -i -X POST "localhost:3000/customers/add"
+
+curl -d "lastName=Bergler" -i -X PUT "localhost:3000/customers/3"
+
+curl -i -X DELETE "localhost:3000/customers/delete?id=1"
+
+INSERT INTO customers (first_name, last_name, phone, email, postal_code) VALUES ('Millicent', 'Zimdars', '9712717976', 'giesel@gmail.com', '97210');
