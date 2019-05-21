@@ -7,13 +7,13 @@ import (
 
 // Location defines a location
 type Location struct {
-	ID          int     `db:"id" json:"id"`
-	Name        string  `db:"name" json:"name"`
-	Description string  `db:"description" json:"description"`
-	Address     string  `db:"address" json:"address"`
-	City        float64 `db:"city" json:"city"`
-	State       float64 `db:"state" json:"state"`
-	PostalCode  float64 `db:"postal_code" json:"postal_code"`
+	ID          int    `db:"id" json:"id"`
+	Name        string `db:"name" json:"name"`
+	Description string `db:"description" json:"description"`
+	Address     string `db:"address" json:"address"`
+	City        string `db:"city" json:"city"`
+	State       string `db:"state" json:"state"`
+	PostalCode  string `db:"postal_code" json:"postal_code"`
 }
 
 // AllLocations returns all locations in the database.

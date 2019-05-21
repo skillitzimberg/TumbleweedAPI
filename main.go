@@ -36,6 +36,12 @@ func main() {
 	http.HandleFunc("/products/edit", editProduct)
 	http.HandleFunc("/products/delete", deleteProduct)
 
+	http.HandleFunc("/locations", getLocations)
+	http.HandleFunc("/locations/find", getLocation)
+	http.HandleFunc("/locations/add", addLocation)
+	http.HandleFunc("/locations/edit", editLocation)
+	http.HandleFunc("/locations/delete", deleteLocation)
+
 	http.ListenAndServe(":3000", nil)
 }
 
@@ -295,6 +301,138 @@ func deleteProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rowsAffected, err := models.DeleteProduct(prdctID)
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	marshalAndWriteJSON(w, rowsAffected)
+}
+
+// Locations functions
+func getLocations(w http.ResponseWriter, r *http.Request) {
+	checkHTTPMethod(w, r, "GET")
+
+	prdcts, err := models.AllLocations()
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	marshalAndWriteJSON(w, prdcts)
+}
+
+func getLocation(w http.ResponseWriter, r *http.Request) {
+	checkHTTPMethod(w, r, "GET")
+
+	id := r.FormValue("id")
+	if id == "" {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	productID, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	prdct, err := models.GetLocation(productID)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	marshalAndWriteJSON(w, prdct)
+}
+
+func addLocation(w http.ResponseWriter, r *http.Request) {
+	checkHTTPMethod(w, r, "POST")
+
+	name := r.FormValue("name")
+	description := r.FormValue("description")
+	address := r.FormValue("address")
+	city := r.FormValue("city")
+	state := r.FormValue("state")
+	postalCode := r.FormValue("postalCode")
+	if name == "" || description == "" || address == "" || city == "" || state == "" || postalCode == "" {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	location := models.Location{
+		Name:        name,
+		Description: description,
+		Address:     address,
+		City:        city,
+		State:       state,
+		PostalCode:  postalCode,
+	}
+
+	rowsAffected, err := models.AddLocation(location)
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	marshalAndWriteJSON(w, rowsAffected)
+}
+
+func editLocation(w http.ResponseWriter, r *http.Request) {
+	checkHTTPMethod(w, r, "PUT")
+
+	id := r.FormValue("id")
+	name := r.FormValue("name")
+	description := r.FormValue("description")
+	address := r.FormValue("address")
+	city := r.FormValue("city")
+	state := r.FormValue("state")
+	postalCode := r.FormValue("postalCode")
+	if id == "" || name == "" || description == "" || address == "" || city == "" || state == "" || postalCode == "" {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	locationID, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	location := models.Location{
+		ID:          locationID,
+		Name:        name,
+		Description: description,
+		Address:     address,
+		City:        city,
+		State:       state,
+		PostalCode:  postalCode,
+	}
+
+	rowsAffected, err := models.EditLocation(location)
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	marshalAndWriteJSON(w, rowsAffected)
+}
+
+func deleteLocation(w http.ResponseWriter, r *http.Request) {
+	checkHTTPMethod(w, r, "DELETE")
+
+	id := r.FormValue("id")
+	if id == "" {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	locationID, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	rowsAffected, err := models.DeleteLocation(locationID)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 		return
