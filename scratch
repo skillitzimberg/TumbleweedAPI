@@ -8,9 +8,15 @@ createCustomerTableStatement := `CREATE TABLE IF NOT EXISTS customers (id SERIAL
 
 INSERT INTO customers (first_name, last_name, phone, email, postalCode) VALUES ('Millicent', 'Zimdars', '9712717976', 'giesel@gmail.com', '97210');
 
-createProductTableStatement := `CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name TEXT, type TEXT, description TEXT, ingredients TEXT[], price TEXT);`
+createProductTableStatement := `CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name TEXT, type TEXT, description TEXT, ingredients TEXT[], price NUMERIC(6, 2);`
 
 INSERT INTO products (name, type, description, ingredients, price) VALUES ('Challa', 'Traditional', 'Braided and lightly sweet', '{"flour", "water", "sugar"}', 4.65);
+
+INSERT INTO products (name, type, description, ingredients, price) VALUES ('Country Sour', 'sourdough', 'Rustic sourdough', ['flour', 'water', 'sugar', 'sour'], 4.65);
+
+curl -d "name=Raisin Cinnamon Roll&type=sweet&description=A breakfast classic&ingredients[]=flour&ingredients[]=water&ingredients[]=sugar&ingredients[]=raisins&ingredients[]=cinnamon&price=6.45" -i -X POST "localhost:3000/products/add"
+
+-d "items[]=Item 1&items[]=Item 2" 
 
 curl -d "firstName=Godot&lastName=Zimberg&phone=9712747176&email=dosey@gmail.com&postalCode=97211" -i -X POST "localhost:3000/customers/add"
 
