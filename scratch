@@ -4,11 +4,17 @@ docker exec -it tumbleweed-db psql -h localhost -p 5432 -U postgres
 
 CREATE DATABASE tumbleweed;
 
-createTableStatement := `CREATE TABLE IF NOT EXISTS customers (id SERIAL PRIMARY KEY, first_name TEXT, last_name TEXT, phone TEXT, email TEXT UNIQUE NOT NULL, postalCode TEXT);`
+CUSTOMERS
+
+createCustomerTableStatement := `CREATE TABLE IF NOT EXISTS customers (id SERIAL PRIMARY KEY, first_name TEXT, last_name TEXT, phone TEXT, email TEXT UNIQUE NOT NULL, postalCode TEXT);`
 
 INSERT INTO customers (first_name, last_name, phone, email, postalCode) VALUES ('Millicent', 'Zimdars', '9712717976', 'giesel@gmail.com', '97210');
 
-curl -d "firstName=Godot&lastName=Zimberg&phone=9712747176&email=dosey@gmail.com&postalCode=97211" -i -X POST "localhost:3000/customers/add"
+curl -d "id=2&firstName=Godot&lastName=Bergler&phone=9712747176&email=dosey@gmail.com&postalCode=97211" -i -X PUT "localhost:3000/customers/edit"
+
+curl -d "firstName=Guillermo&lastName=Zimberg&phone=5038905118&email=guido@gmail.com&postalCode=97211" -i -X POST "localhost:3000/customers/add"
+
+curl -d "firstName=Scott&lastName=Bergler&phone=5038905118&email=mboink@gmail.com&postalCode=97211" -i -X POST "localhost:3000/customers/add"
 
 curl -i localhost:3000/customers
 
@@ -16,6 +22,29 @@ curl -d "id=2&firstName=Godot&lastName=Bergler&phone=9712747176&email=dosey@gmai
 
 curl -i -X GET "localhost:3000/customers/find?id=1"
 
-curl -d "lastName=Bergler" -i -X PUT "localhost:3000/customers/3"
-
 curl -i -X DELETE "localhost:3000/customers/delete?id=1"
+
+PRODUCTS
+
+createProductTableStatement := `CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name TEXT, type TEXT, description TEXT, ingredients TEXT[], price NUMERIC(6, 2);`
+
+INSERT INTO products (name, type, description, ingredients, price) VALUES ('Challa', 'Traditional', 'Braided and lightly sweet', '{"flour", "water", "sugar"}', 4.65);
+
+INSERT INTO products (name, type, description, ingredients, price) VALUES ('Country Sour', 'sourdough', 'Rustic sourdough', ['flour', 'water', 'sugar', 'sour'], 4.65);
+
+curl -d "id=35&name=Raisin Cinnamon Roll&type=shriveled&description=A breakfast too far&ingredients=flour water sugar raisins tabasco&price=6.43" -i -X PUT "localhost:3000/products/edit"
+
+curl -i -X DELETE "localhost:3000/products/delete?id=35"
+
+
+STEPS FOR TROUBLESHOOTING CODE:
+1. Summarize the problem
+2. Provide background including what you've already tried
+3. Show some code
+4. Describe expected and actual results including any error messages
+5. Have an appropriate amount of shame:
+  - meaning if you are going to ask for help, how thorough have you actually been? 
+  - Did you re-read everything? 
+  - Look for typos? 
+  - Consistent naming?
+  - If you have working code that does similar things, have you tried changing that to mimic the behavior your getting with the current code?

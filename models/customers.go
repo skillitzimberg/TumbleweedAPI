@@ -65,7 +65,7 @@ func GetCustomer(id int) (*Customer, error) {
 func AddCustomer(customerRecord CustomerRecord) (result sql.Result, err error) {
 	fmt.Println("Got to AddCustomer")
 
-	insertCustomer := fmt.Sprint("INSERT INTO customers (first_name, last_name, email, phone, postalCode) VALUES ($1, $2, $3, $4, $5)")
+	insertCustomer := fmt.Sprint("INSERT INTO customers (first_name, last_name, phone, email, postalCode) VALUES ($1, $2, $3, $4, $5)")
 
 	result, err = db.Exec(insertCustomer, customerRecord.FirstName, customerRecord.LastName, customerRecord.Phone, customerRecord.Email, customerRecord.PostalCode)
 
@@ -74,7 +74,7 @@ func AddCustomer(customerRecord CustomerRecord) (result sql.Result, err error) {
 
 //EditCustomer edits a customer in the database using PUT.
 func EditCustomer(customer Customer) (result sql.Result, err error) {
-	editCustomer := fmt.Sprint("UPDATE customers SET first_name=$1, last_name=$2, email=$3, phone=$4, postalCode=$5 WHERE id = $6")
+	editCustomer := fmt.Sprint("UPDATE customers SET first_name=$1, last_name=$2, phone=$3, email=$4, postalCode=$5 WHERE id = $6")
 
 	result, err = db.Exec(editCustomer, customer.FirstName, customer.LastName, customer.Phone, customer.Email, customer.PostalCode, customer.ID)
 
