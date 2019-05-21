@@ -32,8 +32,8 @@ func main() {
 
 	http.HandleFunc("/products", getProducts)
 	http.HandleFunc("/products/find", getProduct)
-	// http.HandleFunc("/products/add", addProduct)
-	// http.HandleFunc("/products/edit", editProduct)
+	http.HandleFunc("/products/add", addProduct)
+	http.HandleFunc("/products/edit", editProduct)
 	http.HandleFunc("/products/delete", deleteProduct)
 
 	http.ListenAndServe(":3000", nil)
@@ -204,71 +204,81 @@ func getProduct(w http.ResponseWriter, r *http.Request) {
 	marshalAndWriteJSON(w, prdct)
 }
 
-// func addProduct(w http.ResponseWriter, r *http.Request) {
-// 	checkHTTPMethod(w, r, "POST")
+func addProduct(w http.ResponseWriter, r *http.Request) {
+	checkHTTPMethod(w, r, "POST")
 
-// 	name := r.FormValue("name")
-// 	productType := r.FormValue("type")
-// 	description := r.FormValue("descrition")
-// 	ingredients := r.FormValue("ingredients")
-// 	price := r.FormValue("price")
-// 	if name == "" || productType == "" || description == "" || ingredients == "" || price == "" {
-// 		http.Error(w, http.StatusText(400), 400)
-// 		return
-// 	}
+	name := r.FormValue("name")
+	productType := r.FormValue("type")
+	description := r.FormValue("description")
+	ingredients := r.FormValue("ingredients")
+	price := r.FormValue("price")
+	if name == "" || productType == "" || description == "" || ingredients == "" || price == "" {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
 
-// 	record := models.Product{
-// 		Name:        name,
-// 		Type:        productType,
-// 		Description: description,
-// 		Ingredients: []ingredients,
-// 		Price:       price,
-// 	}
+	productPrice, err := strconv.ParseFloat(price, 64)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
-// 	rowsAffected, err := models.AddProduct(record)
-// 	if err != nil {
-// 		http.Error(w, http.StatusText(500), 500)
-// 		return
-// 	}
+	product := models.Product{
+		Name:        name,
+		Type:        productType,
+		Description: description,
+		Ingredients: ingredients,
+		Price:       productPrice,
+	}
 
-// 	marshalAndWriteJSON(w, rowsAffected)
-// }
+	rowsAffected, err := models.AddProduct(product)
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
 
-// func editProduct(w http.ResponseWriter, r *http.Request) {
-// 	checkHTTPMethod(w, r, "PUT")
+	marshalAndWriteJSON(w, rowsAffected)
+}
 
-// 	id := r.FormValue("id")
-// 	name := r.FormValue("name")
-// 	productType := r.FormValue("productType")
-// 	description := r.FormValue("description")
-// 	ingredients := r.FormValue("ingredients")
-// 	price := r.FormValue("price")
-// 	if id == "" || name == "" || productType == "" || description == "" || ingredients == "" || price == "" {
-// 		http.Error(w, http.StatusText(400), 400)
-// 		return
-// 	}
+func editProduct(w http.ResponseWriter, r *http.Request) {
+	checkHTTPMethod(w, r, "PUT")
 
-// 	prdctID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		fmt.Println(err.Error())
-// 	}
-// 	product := models.Product{
-// 		ID:          prdctID,
-// 		Name:        name,
-// 		Type:        productType,
-// 		Description: description,
-// 		Ingredients: ingredients,
-// 		Price:       price,
-// 	}
+	id := r.FormValue("id")
+	name := r.FormValue("name")
+	productType := r.FormValue("type")
+	description := r.FormValue("description")
+	ingredients := r.FormValue("ingredients")
+	price := r.FormValue("price")
+	if id == "" || name == "" || productType == "" || description == "" || ingredients == "" || price == "" {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
 
-// 	rowsAffected, err := models.EditProduct(product)
-// 	if err != nil {
-// 		http.Error(w, http.StatusText(500), 500)
-// 		return
-// 	}
+	productID, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
-// 	marshalAndWriteJSON(w, rowsAffected)
-// }
+	productPrice, err := strconv.ParseFloat(price, 64)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	product := models.Product{
+		ID:          productID,
+		Name:        name,
+		Type:        productType,
+		Description: description,
+		Ingredients: ingredients,
+		Price:       productPrice,
+	}
+
+	rowsAffected, err := models.EditProduct(product)
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	marshalAndWriteJSON(w, rowsAffected)
+}
 
 func deleteProduct(w http.ResponseWriter, r *http.Request) {
 	checkHTTPMethod(w, r, "DELETE")

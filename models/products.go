@@ -7,12 +7,12 @@ import (
 
 // Product defines a product
 type Product struct {
-	ID          int      `db:"id" json:"id"`
-	Name        string   `db:"name" json:"name"`
-	Type        string   `db:"type" json:"type"`
-	Description string   `db:"description" json:"description"`
-	Ingredients []string `db:"ingredients" json:"ingredients"`
-	Price       float32  `db:"price" json:"price"`
+	ID          int     `db:"id" json:"id"`
+	Name        string  `db:"name" json:"name"`
+	Type        string  `db:"productType" json:"productType"`
+	Description string  `db:"description" json:"description"`
+	Ingredients string  `db:"ingredients" json:"ingredients"`
+	Price       float64 `db:"price" json:"price"`
 }
 
 // AllProducts returns all products in the database.
