@@ -50,6 +50,40 @@ curl -d "id=2&name=Dog Run&description=shriveled chiles&address=908 20th Pl&city
 
 curl -i -X DELETE "localhost:3000/locations/delete?id=3"
 
+ORDERS
+
+createOrdersTableStatement := `CREATE TABLE IF NOT EXISTS orders (id SERIAL PRIMARY KEY, customer_id INT, products_ordered ARRAY[][], pickup_location_id INT, pickup_date TEXT, order_total NUMERIC(6,2));`
+
+INSERT INTO orders (name, description, address, city, state, postal_code) VALUES ('Farmers Market', 'Mung beans & cows', '123 Main St', 'Alamosa', 'CO', '45632');
+
+INSERT INTO orders (name, description, address, city, state, postal_code) VALUES ('Flea Market', '456 South Pacific Ave', 'Walsenburg', 'CO', '87612');
+
+curl -d "name=Guidos Garage&description=Greasy finds&address=345 Tomgilden St&city=Cresent&state=CO&postalCode=97211" -i -X POST "localhost:3000/orders/add"
+
+curl -d "id=2&name=Dog Run&description=shriveled chiles&address=908 20th Pl&city=Corbin&state=CO&postalCode=23454" -i -X PUT "localhost:3000/orders/edit"
+
+curl -i -X DELETE "localhost:3000/orders/delete?id=3"
+
+ORDERS WILL HAVE:
+Order ID
+Customer ID
+Array [Product ID, Qty]
+Location ID
+Pickup Date
+Order Total
+
+ORDERS WILL NEED FUNCTIONALITY FOR:
+Getting customer name, phone, email
+Getting product name, price (this might need CREATE TYPE . . . AS: https://www.postgresql.org/docs/9.5/rowtypes.html)
+Getting location name, address
+Calculating price for quantity of product
+Calculating order Total
+
+I think an order should as much as possible hold the minimum amount of information needed to calculate, generate, or find any necessary information.
+
+I think the end point for orders might be 
+
+
 
 STEPS FOR TROUBLESHOOTING CODE:
 1. Summarize the problem
