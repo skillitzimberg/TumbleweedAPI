@@ -63,10 +63,10 @@ func AddProduct(product Product) (result sql.Result, err error) {
 }
 
 //EditProduct edits a products in the database using PUT.
-func EditProduct(products Product) (result sql.Result, err error) {
+func EditProduct(product Product) (result sql.Result, err error) {
 	editProduct := fmt.Sprint("UPDATE products SET name=$1, type=$2, description=$3, ingredients=$4, price=$5 WHERE id = $6")
 
-	result, err = db.Exec(editProduct, products.Name, products.Type, products.Description, products.Ingredients, products.Price, products.ID)
+	result, err = db.Exec(editProduct, product.Name, product.Type, product.Description, product.Ingredients, product.Price, product.ID)
 
 	return
 }
