@@ -11,3 +11,4 @@ Content-Length: 22
 Internal Server Error
 
 FIX:
+models.AddLocation: db.Exec() had too many arguments.

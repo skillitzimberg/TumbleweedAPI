@@ -56,9 +56,9 @@ func GetLocation(id int) (*Location, error) {
 //AddLocation add a locations to the database.
 func AddLocation(location Location) (result sql.Result, err error) {
 
-	insertLocation := fmt.Sprint("INSERT INTO locations (name, type, description, ingredients, price) VALUES ($1, $2, $3, $4, $5)")
+	insertLocation := fmt.Sprint("INSERT INTO locations (name, description, address, city, state, postal_code) VALUES ($1, $2, $3, $4, $5, $6)")
 
-	result, err = db.Exec(insertLocation, location.ID, location.Name, location.Description, location.Address, location.City, location.State, location.PostalCode)
+	result, err = db.Exec(insertLocation, location.Name, location.Description, location.Address, location.City, location.State, location.PostalCode)
 
 	return
 }
