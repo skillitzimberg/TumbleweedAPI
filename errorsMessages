@@ -1,0 +1,13 @@
+CLI COMMAND: 
+curl -d "name=Guidos Garage&description=Greasy finds&address=345 Tomgilden St&city=Cresent&state=CO&postalCode=97211" -i -X POST "localhost:3000/locations/add"
+
+ERROR:
+HTTP/1.1 500 Internal Server Error
+Content-Type: text/plain; charset=utf-8
+X-Content-Type-Options: nosniff
+Date: Tue, 21 May 2019 20:46:50 GMT
+Content-Length: 22
+
+Internal Server Error
+
+FIX:

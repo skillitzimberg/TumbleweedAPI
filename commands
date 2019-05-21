@@ -40,11 +40,13 @@ LOCATIONS
 
 createLocationsTableStatement := `CREATE TABLE IF NOT EXISTS locations (id SERIAL PRIMARY KEY, name TEXT, description TEXT, address TEXT, city TEXT, state TEXT, postal_code TEXT);`
 
-INSERT INTO locations (name, description, address, city, state, postal_code) VALUES ('Farmer's Market', '123 Main St', 'Alamosa', 'CO', '45632');
+INSERT INTO locations (name, description, address, city, state, postal_code) VALUES ('Farmers Market', 'Mung beans & cows', '123 Main St', 'Alamosa', 'CO', '45632');
 
 INSERT INTO locations (name, description, address, city, state, postal_code) VALUES ('Flea Market', '456 South Pacific Ave', 'Walsenburg', 'CO', '87612');
 
-curl -d "id=2&name=Dog Run&description=shriveled&address=908 20th Pl&city=Corbin&state=CO&postalCode=23454" -i -X PUT "localhost:3000/locations/edit"
+curl -d "name=Guidos Garage&description=Greasy finds&address=345 Tomgilden St&city=Cresent&state=CO&postalCode=97211" -i -X POST "localhost:3000/locations/add"
+
+curl -d "id=2&name=Dog Run&description=shriveled chiles&address=908 20th Pl&city=Corbin&state=CO&postalCode=23454" -i -X PUT "localhost:3000/locations/edit"
 
 curl -i -X DELETE "localhost:3000/locations/delete?id=3"
 
