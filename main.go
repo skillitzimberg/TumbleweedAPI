@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	host     = "localhost"
+	host     = "tumbleweed-db"
 	port     = 5432
 	user     = "postgres"
 	password = "docker"
