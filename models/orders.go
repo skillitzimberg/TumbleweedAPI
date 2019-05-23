@@ -58,7 +58,7 @@ func createOrderHeaders() ([]*OrderHeader, error) {
 	return orderHeaders, nil
 }
 
-func getOrderedProducts() ([]*ProductOrdered, error) {
+func getAllOrdersProducts() ([]*ProductOrdered, error) {
 	rows, err := db.Query("SELECT products_orders.order_id, products_orders.product_id, products.name, products.price, products_orders.quantity FROM orders LEFT JOIN products_orders ON orders.id = products_orders.order_id LEFT JOIN products ON products_orders.product_id = products.id;")
 
 	if err != nil {
@@ -124,7 +124,7 @@ func AllOrders() ([]*Order, error) {
 		fmt.Println("OrderHeaders: ", orderHeaders[i])
 	}
 
-	orderedProducts, err := getOrderedProducts()
+	orderedProducts, err := getAllOrdersProducts()
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -167,17 +167,43 @@ func AllOrders() ([]*Order, error) {
 	return orders, nil
 }
 
-// GetOrder returns a orders from the database.
-// func GetOrder(id int) (*Order, error) {
-// 	row := db.QueryRow("SELECT * FROM orders WHERE id=$1", id)
+// GetOrder returns an order from the database.
+func GetOrder(id int) (*Order, error) {
+	orderHeaderRow := db.QueryRow("SELECT orders.id, orders.pickup_location_id, orders.pickup_date, orders.customer_id FROM orders WHERE id=$1", id)
 
-// 	order := new(Order)
-// 	err := row.Scan(&order.ID, &order.CustomerID, &order.ProductsOrdered, &order.PickupLocationID, &order.PickupDate, &order.OrderTotal)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return order, nil
-// }
+	productRows, err := db.Query("SELECT products_orders.order_id, products_orders.product_id, products.name, products.price, products_orders.quantity FROM products JOIN products_orders ON products.id = products_orders.product_id WHERE products_orders.order_id=$1;", id)
+	if err != nil {
+		return nil, err
+	}
+	orderHeader := new(OrderHeader)
+	err = orderHeaderRow.Scan(&orderHeader.OrderID, &orderHeader.PickupLocationID, &orderHeader.PickupDate, &orderHeader.CustomerID)
+	if err != nil {
+		return nil, err
+	}
+
+	products := make([]ProductOrdered, 0)
+	for productRows.Next() {
+		product := new(ProductOrdered)
+		err = productRows.Scan(&product.OrderID, &product.ProductID, &product.ProductName, &product.ProductPrice, &product.QuantityOrdered)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, *product)
+	}
+
+	customer, err := GetCustomer(orderHeader.CustomerID)
+	if err != nil {
+		return nil, err
+	}
+	total := calculateOrderTotal(products)
+
+	order := new(Order)
+	order.OrderHeader = *orderHeader
+	order.Customer = *customer
+	order.ProductsOrdered = products
+	order.Total = total
+	return order, nil
+}
 
 //AddOrder add a orders to the database.
 // func AddOrder(order Order) (result sql.Result, err error) {

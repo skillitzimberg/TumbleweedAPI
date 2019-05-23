@@ -104,6 +104,12 @@ ON orders.id = products_orders.order_id
 JOIN products
 ON products_orders.product_id = products.id;
 
+SELECT products_orders.order_id, products_orders.product_id, products.name, products_orders.quantity
+FROM products
+JOIN products_orders
+ON products.id = products_orders.product_id
+WHERE products_orders.order_id=1;
+
 SELECT *
 FROM orders
 JOIN products_orders

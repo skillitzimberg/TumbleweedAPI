@@ -43,7 +43,7 @@ func main() {
 	http.HandleFunc("/locations/delete", deleteLocation)
 
 	http.HandleFunc("/orders", getOrders)
-	// http.HandleFunc("/orders/find", getOrder)
+	http.HandleFunc("/orders/find", getOrder)
 	// http.HandleFunc("/orders/add", addOrder)
 	// http.HandleFunc("/orders/edit", editOrder)
 	// http.HandleFunc("/orders/delete", deleteOrder)
@@ -461,6 +461,31 @@ func getOrders(w http.ResponseWriter, r *http.Request) {
 	marshalAndWriteJSON(w, prdcts)
 }
 
+func getOrder(w http.ResponseWriter, r *http.Request) {
+	checkHTTPMethod(w, r, "GET")
+
+	id := r.FormValue("id")
+	if id == "" {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	orderID, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	order, err := models.GetOrder(orderID)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	marshalAndWriteJSON(w, order)
+}
+
+// HELPER FUNCTIONS
 func marshalAndWriteJSON(w http.ResponseWriter, objectToMarshal interface{}) {
 	js, err := json.Marshal(objectToMarshal)
 	if err != nil {
