@@ -17,11 +17,11 @@ type CustomerRecord struct {
 // Customer gives form to a customer's data returned from the database (includes ID).
 type Customer struct {
 	ID         int    `db:"id" json:"id"`
-	FirstName  string `db:"first_name" json:"firstName"`
-	LastName   string `db:"last_name" json:"lastName"`
+	FirstName  string `db:"first_name" json:"first_name"`
+	LastName   string `db:"last_name" json:"last_name"`
 	Phone      string `db:"phone" json:"phone"`
 	Email      string `db:"email" json:"email"`
-	PostalCode string `db:"postalCode" json:"postalCode"`
+	PostalCode string `db:"postalCode" json:"postal_code"`
 }
 
 // AllCustomers returns all customers in the database.

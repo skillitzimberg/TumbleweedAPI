@@ -30,6 +30,10 @@ createProductTableStatement := `CREATE TABLE IF NOT EXISTS products (id SERIAL P
 
 INSERT INTO products (name, type, description, ingredients, price) VALUES ('Challa', 'Traditional', 'Braided and lightly sweet', '{"flour", "water", "sugar"}', 4.65);
 
+INSERT INTO products (name, type, description, ingredients, price) VALUES ('Cranberry Scone', 'sweet', 'Irish-style breakfast', '{"flour", "water", "sugar", cranberries, lemon zest}', 2.75);
+
+INSERT INTO products (name, type, description, ingredients, price) VALUES ('Cranberry Scone', 'sweet', 'Irish-style breakfast', '{"flour", "water", "sugar", cranberries, lemon zest}', 2.75);
+
 INSERT INTO products (name, type, description, ingredients, price) VALUES ('Country Sour', 'sourdough', 'Rustic sourdough', ['flour', 'water', 'sugar', 'sour'], 4.65);
 
 curl -d "id=35&name=Raisin Cinnamon Roll&type=shriveled&description=A breakfast too far&ingredients=flour water sugar raisins tabasco&price=6.43" -i -X PUT "localhost:3000/products/edit"
@@ -57,6 +61,10 @@ createOrdersTableStatement := `CREATE TABLE IF NOT EXISTS orders (id SERIAL PRIM
 INSERT INTO orders (customer_id, products_ordered, pickup_location_id, pickup_date, order_total) VALUES (2, '{{2, 6}}', 2, '5/29/2019', 42.26);
 
 INSERT INTO orders (customer_id, products_ordered, pickup_location_id, pickup_date, order_total) VALUES (41, '{{1, 3}, {36, 10}}', 1, '5/29/2019', 31.20);
+
+ALTER TABLE orders ADD COLUMN order_date varchar(30);
+
+ALTER TABLE orders DROP COLUMN order_total RESTRICT;
 
 curl -d "name=Guidos Garage&description=Greasy finds&address=345 Tomgilden St&city=Cresent&state=CO&postalCode=97211" -i -X POST "localhost:3000/orders/add"
 

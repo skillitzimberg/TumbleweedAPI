@@ -7,8 +7,8 @@ import (
 
 // OrderHeader collects basic order information
 type OrderHeader struct {
-	OrderID int `db:"id" json:"id"`
-	// OrderDate        string `db:"order_date" json:"order_date"`
+	OrderID          int    `db:"id" json:"id"`
+	OrderDate        string `db:"order_date" json:"order_date"`
 	PickupLocationID int    `db:"pickup_location" json:"pickup_location"`
 	PickupDate       string `db:"pickup_date" json:"pickup_date"`
 	CustomerID       int    `db:"customer_id" json:"customer_id"`
@@ -32,6 +32,7 @@ type OrderTotal struct {
 type Order struct {
 	OrderHeader     OrderHeader
 	Customer        Customer
+	Location        *Location
 	ProductsOrdered []ProductOrdered
 	Total           float64
 }
@@ -114,23 +115,16 @@ func calculateOrderTotal(productsOnOrder []ProductOrdered) (orderTotal float64) 
 
 // AllOrders returns all orders in the database.
 func AllOrders() ([]*Order, error) {
-	fmt.Println("All Orders")
 	orderHeaders, err := createOrderHeaders()
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
-	}
-	for i := 0; i < len(orderHeaders); i++ {
-		fmt.Println("OrderHeaders: ", orderHeaders[i])
 	}
 
 	orderedProducts, err := getAllOrdersProducts()
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
-	}
-	for i := 0; i < len(orderedProducts); i++ {
-		fmt.Println("OrderedProducts: ", orderedProducts[i])
 	}
 
 	customers, err := getCustomersWithOrders()
@@ -150,6 +144,11 @@ func AllOrders() ([]*Order, error) {
 			}
 		}
 
+		order.Location, err = GetLocation(order.OrderHeader.PickupLocationID)
+		if err != nil {
+			return nil, err
+		}
+
 		for j := 0; j < len(orderedProducts); j++ {
 			if orderHeaders[i].OrderID == orderedProducts[j].OrderID {
 				order.ProductsOrdered = append(order.ProductsOrdered, *orderedProducts[j])
@@ -158,10 +157,6 @@ func AllOrders() ([]*Order, error) {
 		}
 
 		orders = append(orders, order)
-	}
-
-	for k := 0; k < len(orders); k++ {
-		fmt.Println("Products: ", orders[k])
 	}
 
 	return orders, nil
@@ -200,6 +195,10 @@ func GetOrder(id int) (*Order, error) {
 	order := new(Order)
 	order.OrderHeader = *orderHeader
 	order.Customer = *customer
+	order.Location, err = GetLocation(orderHeader.PickupLocationID)
+	if err != nil {
+		return nil, err
+	}
 	order.ProductsOrdered = products
 	order.Total = total
 	return order, nil
