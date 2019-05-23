@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	host     = "tumbleweed-db"
+	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
 	password = "docker"
@@ -41,6 +41,12 @@ func main() {
 	http.HandleFunc("/locations/add", addLocation)
 	http.HandleFunc("/locations/edit", editLocation)
 	http.HandleFunc("/locations/delete", deleteLocation)
+
+	http.HandleFunc("/orders", getOrders)
+	// http.HandleFunc("/orders/find", getOrder)
+	// http.HandleFunc("/orders/add", addOrder)
+	// http.HandleFunc("/orders/edit", editOrder)
+	// http.HandleFunc("/orders/delete", deleteOrder)
 
 	http.ListenAndServe(":3000", nil)
 }
@@ -439,6 +445,20 @@ func deleteLocation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	marshalAndWriteJSON(w, rowsAffected)
+}
+
+// Order functions
+func getOrders(w http.ResponseWriter, r *http.Request) {
+	checkHTTPMethod(w, r, "GET")
+
+	prdcts, err := models.AllOrders()
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	marshalAndWriteJSON(w, prdcts)
 }
 
 func marshalAndWriteJSON(w http.ResponseWriter, objectToMarshal interface{}) {

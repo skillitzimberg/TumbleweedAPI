@@ -52,11 +52,11 @@ curl -i -X DELETE "localhost:3000/locations/delete?id=3"
 
 ORDERS
 
-createOrdersTableStatement := `CREATE TABLE IF NOT EXISTS orders (id SERIAL PRIMARY KEY, customer_id INT, products_ordered ARRAY[][], pickup_location_id INT, pickup_date TEXT, order_total NUMERIC(6,2));`
+createOrdersTableStatement := `CREATE TABLE IF NOT EXISTS orders (id SERIAL PRIMARY KEY, customer_id INT, products_ordered integer[][], pickup_location_id INT, pickup_date TEXT, order_total NUMERIC(6,2));`
 
-INSERT INTO orders (name, description, address, city, state, postal_code) VALUES ('Farmers Market', 'Mung beans & cows', '123 Main St', 'Alamosa', 'CO', '45632');
+INSERT INTO orders (customer_id, products_ordered, pickup_location_id, pickup_date, order_total) VALUES (2, '{{2, 6}}', 2, '5/29/2019', 42.26);
 
-INSERT INTO orders (name, description, address, city, state, postal_code) VALUES ('Flea Market', '456 South Pacific Ave', 'Walsenburg', 'CO', '87612');
+INSERT INTO orders (customer_id, products_ordered, pickup_location_id, pickup_date, order_total) VALUES (41, '{{1, 3}, {36, 10}}', 1, '5/29/2019', 31.20);
 
 curl -d "name=Guidos Garage&description=Greasy finds&address=345 Tomgilden St&city=Cresent&state=CO&postalCode=97211" -i -X POST "localhost:3000/orders/add"
 
@@ -79,11 +79,40 @@ Getting location name, address
 Calculating price for quantity of product
 Calculating order Total
 
-I think an order should as much as possible hold the minimum amount of information needed to calculate, generate, or find any necessary information.
+I think an order should hold the minimum amount of information needed to calculate, generate, or find any necessary information.
 
 I think the end point for orders might be 
 
+PRODUCTS_ORDERS
+CREATE TABLE IF NOT EXISTS products_orders (product_id INT, order_id INT, quantity INT);
 
+INSERT INTO products_orders (order_id, product_id, quantity) VALUES (2, 36, 10);
+
+INSERT INTO products_orders (order_id, product_id, quantity) VALUES (3, 2, 8);
+
+SELECT * FROM orders, products_orders WHERE orders.id = products_orders.order_id;
+
+OrderHeader()
+SELECT orders.id, orders.pickup_location_id, orders.pickup_date, orders.customer_id
+FROM orders;
+
+ProductQuantity()
+SELECT products_orders.order_id, products_orders.product_id, products.name, products_orders.quantity
+FROM orders
+JOIN products_orders
+ON orders.id = products_orders.order_id
+JOIN products
+ON products_orders.product_id = products.id;
+
+SELECT *
+FROM orders
+JOIN products_orders
+ON orders.id = products_orders.order_id;
+
+SELECT customers.first_name, customers.last_name, customers.phone, customers.email, customers.postalcode
+FROM customers
+JOIN orders
+ON orders.customer_id = customers.id;
 
 STEPS FOR TROUBLESHOOTING CODE:
 1. Summarize the problem
